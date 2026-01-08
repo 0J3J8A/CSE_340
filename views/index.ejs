@@ -1,2 +1,61 @@
-<h1>Juan Jose Aguirre Marin</h1>
-<h2>Add whatever changes you will make to the code in VSC</h2>
+<%- include('partials/header') %>
+<%- include('partials/navigation') %>
+
+<main>
+    
+    <h2>Welcome to CSE Motors!</h2>
+    
+    <img id="background_1" src="/images/vehicles/delorean.jpg" alt="Delorean DMC-12 vehicle">
+    
+    <div id="DCM-info">
+        <h3>DMC Delorean</h3>
+        <p>3 Cup holders</p>
+        <p>Superman doors</p>
+        <p>Fuzzy dice!</p>
+        <img src="/images/site/own_today.png" alt="Own Today promotion">
+    </div>
+    
+    <section id="UP_RE">
+        <div id="UP">
+            <h3>Delorean Upgrades</h3>
+            <div class="upgrades-grid">
+                <div class="upgrade-item">
+                    <div class="image-container">
+                        <img src="/images/upgrades/flux-cap.png" alt="Flux Capacitor upgrade">
+                    </div>
+                    <a href="#" class="upgrade-link">Flux Capacitor</a>
+                </div>
+                <div class="upgrade-item">
+                    <div class="image-container">
+                        <img src="/images/upgrades/flame.jpg" alt="Flame Decals upgrade">
+                    </div>
+                    <a href="#" class="upgrade-link">Flame Decals</a>
+                </div>
+                <div class="upgrade-item">
+                    <div class="image-container">
+                        <img src="/images/upgrades/bumper_sticker.jpg" alt="Bumper Stickers upgrade">
+                    </div>
+                    <a href="#" class="upgrade-link">Bumper Stickers</a>
+                </div>
+                <div class="upgrade-item">
+                    <div class="image-container">
+                        <img src="/images/upgrades/hub-cap.jpg" alt="Hub Caps upgrade">
+                    </div>
+                    <a href="#" class="upgrade-link">Hub Caps</a>
+                </div>
+            </div>
+        </div>
+        <div id="RE">
+            <h3>DMC Delorean Reviews</h3>
+            <ul>
+                <li>"So fast it's almost like traveling in time." (4/5)</li>
+                <li>"Coolest ride on the road." (4/5)</li>
+                <li>"I'm feeling McFly!" (5/5)</li>
+                <li>"The most futuristic ride of our day." (4.5/5)</li>
+                <li>"80's livin' and I love it!" (5/5)</li>
+            </ul>
+        </div>
+    </section>
+</main>
+
+<%- include('partials/footer') %>
