@@ -9,11 +9,14 @@ const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const env = require("dotenv").config()
 const app = express()
+const baseController = require("./controllers/baseController")
+const inventoryRoute = require("./routes/inventoryRoute")
+
 
 /* ***********************
  * Middleware
  *************************/
-app.use(express.static("public"))  // <-- AÑADE ESTA LÍNEA
+app.use(express.static("public"))  
 app.use(expressLayouts)
 
 /* ***********************
@@ -26,9 +29,9 @@ app.set("layout", "./layouts/layout")
  * Routes
  *************************/
 // Index Route
-app.get("/", function(req, res) {
-  res.render("index", { title: "Home" })
-})
+app.get("/", baseController.buildHome)
+// Inventory routes
+app.use("/inv", inventoryRoute)
 
 /* ***********************
  * Local Server Information
