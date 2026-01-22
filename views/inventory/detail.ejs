@@ -1,0 +1,14 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navigation') %>
+
+<main>
+    <!-- Content Heading -->
+    <% if (title) { %>
+    <h1><%= title %></h1>
+    <% } %>
+    
+    <!-- Vehicle Detail Display -->
+    <%- vehicleHTML %>
+</main>
+
+<%- include('../partials/footer') %>
