@@ -1,0 +1,125 @@
+<%- include('../partials/header') %>
+
+<main>
+    <h1><%= title %></h1>
+    
+    <!-- Display flash messages if any -->
+    <% if (messages && messages.error) { %>
+        <div class="flash-message error">
+            <p><%= messages.error %></p>
+        </div>
+    <% } %>
+    <% if (messages && messages.success) { %>
+        <div class="flash-message success">
+            <p><%= messages.success %></p>
+        </div>
+    <% } %>
+    
+    <!-- Registration Form -->
+    <div class="registration-form-container">
+        <form action="/account/register" method="post" class="registration-form">
+            <!-- First Name -->
+            <div class="form-group">
+                <label for="account_firstname">First Name </label>
+                <input 
+                    type="text" 
+                    id="account_firstname" 
+                    name="account_firstname" 
+                    placeholder="Enter your first name" 
+                    required
+                    pattern="[A-Za-z\s]{2,}"
+                    title="First name must be at least 2 characters long"
+                >
+            </div>
+            
+            <!-- Last Name -->
+            <div class="form-group">
+                <label for="account_lastname">Last Name </label>
+                <input 
+                    type="text" 
+                    id="account_lastname" 
+                    name="account_lastname" 
+                    placeholder="Enter your last name" 
+                    required
+                    pattern="[A-Za-z\s]{2,}"
+                    title="Last name must be at least 2 characters long"
+                >
+            </div>
+            
+            <!-- Email -->
+            <div class="form-group">
+                <label for="account_email">Email Address </label>
+                <input 
+                    type="email" 
+                    id="account_email" 
+                    name="account_email" 
+                    placeholder="Enter your email" 
+                    required
+                >
+            </div>
+            
+            <!-- Password with toggle -->
+            <div class="form-group">
+                <label for="account_password">Password </label>
+                <div class="password-container">
+                    <input 
+                        type="password" 
+                        id="account_password" 
+                        name="account_password" 
+                        placeholder="Enter your password" 
+                        required
+                        pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$"
+                        title="Password must be at least 12 characters long, contain at least 1 capital letter, 1 number, and 1 special character"
+                    >
+                    <button type="button" id="togglePassword" class="password-toggle">
+                        👁️‍🗨️
+                    </button>
+                </div>
+                <div class="password-requirements">
+                    <p class="requirements-title">Password Requirements:</p>
+                    <ul class="requirements-list">
+                        <li>Minimum 12 characters</li>
+                        <li>At least 1 capital letter</li>
+                        <li>At least 1 number</li>
+                        <li>At least 1 special character (@$!%*?&)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+            
+            <div class="form-note">
+                <p>* All fields are required</p>
+            </div>
+        </form>
+        
+        <!-- Login link -->
+        <div class="registration-link">
+            <p>Already have an account? <a href="/account/login">Login here</a></p>
+        </div>
+    </div>
+</main>
+
+<!-- Password Toggle JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const togglePassword = document.querySelector('#togglePassword');
+    const passwordInput = document.querySelector('#account_password');
+    
+    if (togglePassword && passwordInput) {
+        togglePassword.addEventListener('click', function() {
+            // Toggle the type attribute
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Toggle the eye icon
+            this.textContent = type === 'password' ? '👁️‍🗨️' : '👁️‍🗨️';
+        });
+    }
+});
+</script>
+
+<%- include('../partials/footer') %>
