@@ -10,7 +10,8 @@ async function buildLogin(req, res, next) {
   res.render("account/login", {
     title: "Login",
     nav,
-    messages: req.flash()
+    messages: req.flash(),
+    errors: null, // AÑADIR
   })
 }
 
@@ -22,7 +23,8 @@ async function buildRegister(req, res, next) {
   res.render("account/register", {
     title: "Register",
     nav,
-    messages: req.flash()
+    messages: req.flash(),
+    errors: null, // AÑADIR
   })
 }
 
