@@ -1,0 +1,147 @@
+<%- include('../partials/header') %>
+
+<main>
+    <h1><%= title %></h1>
+    
+    <!-- Display flash messages if any -->
+    <% if (messages) { %>
+        <% if (messages.error && messages.error.length > 0) { %>
+            <div class="flash-message error">
+                <p><%= messages.error[0] %></p>
+            </div>
+        <% } %>
+        <% if (messages.success && messages.success.length > 0) { %>
+            <div class="flash-message success">
+                <p><%= messages.success[0] %></p>
+            </div>
+        <% } %>
+        <% if (messages.notice && messages.notice.length > 0) { %>
+            <div class="flash-message notice">
+                <p><%= messages.notice[0] %></p>
+            </div>
+        <% } %>
+    <% } %>
+    
+    <!-- Validation Errors -->
+    <% if (errors && errors.length > 0) { %>
+        <div class="flash-message error">
+            <% errors.forEach(error => { %>
+                <p><%= error.msg %></p>
+            <% }) %>
+        </div>
+    <% } %>
+    
+    <!-- Add Classification Form -->
+    <div class="form-container">
+        <form class="form" action="/inv/add-classification" method="post" id="addClassificationForm">
+            <div class="form-group">
+                <label for="classification_name">Classification Name:</label>
+                <input 
+                    type="text" 
+                    id="classification_name" 
+                    name="classification_name" 
+                    class="form-input" 
+                    placeholder="Enter classification name (e.g., SUV, Truck, Sedan)"
+                    value="<%= classification_name || '' %>"
+                    required
+                    pattern="^[a-zA-Z0-9]+$"
+                    title="No spaces or special characters allowed"
+                    maxlength="30"
+                    minlength="2"
+                >
+                <div class="input-hint">
+                    Rules: No spaces, no special characters, 2-30 characters, only letters and numbers
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn">Add Classification</button>
+            </div>
+            
+            <div class="form-link">
+                <a href="/inv/">Return to Inventory Management</a>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Client-side Validation Script -->
+    <script>
+        document.getElementById('addClassificationForm').addEventListener('submit', function(event) {
+            const classificationInput = document.getElementById('classification_name')
+            const classificationValue = classificationInput.value.trim()
+            
+            // Clear previous error messages
+            const existingError = classificationInput.nextElementSibling
+            if (existingError && existingError.classList.contains('validation-error')) {
+                existingError.remove()
+            }
+            
+            // Validation checks
+            const errors = []
+            
+            if (!classificationValue) {
+                errors.push('Classification name is required.')
+            } else {
+                // Check for spaces
+                if (classificationValue.includes(' ')) {
+                    errors.push('Classification name cannot contain spaces.')
+                }
+                
+                // Check for special characters
+                const specialChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/
+                if (specialChars.test(classificationValue)) {
+                    errors.push('Classification name cannot contain special characters.')
+                }
+                
+                // Check length
+                if (classificationValue.length < 2) {
+                    errors.push('Classification name must be at least 2 characters long.')
+                }
+                
+                if (classificationValue.length > 30) {
+                    errors.push('Classification name cannot exceed 30 characters.')
+                }
+            }
+            
+            // Display errors and prevent submission if any
+            if (errors.length > 0) {
+                event.preventDefault()
+                
+                // Create error message element
+                const errorDiv = document.createElement('div')
+                errorDiv.className = 'validation-error'
+                errorDiv.style.color = 'var(--error-color)'
+                errorDiv.style.fontSize = '0.9rem'
+                errorDiv.style.marginTop = '0.25rem'
+                
+                errors.forEach(error => {
+                    const errorP = document.createElement('p')
+                    errorP.textContent = error
+                    errorDiv.appendChild(errorP)
+                })
+                
+                // Insert after the input
+                classificationInput.parentNode.insertBefore(errorDiv, classificationInput.nextSibling)
+                
+                // Add error styling to input
+                classificationInput.style.borderColor = 'var(--error-color)'
+            }
+        })
+        
+        // Real-time validation feedback
+        document.getElementById('classification_name').addEventListener('input', function() {
+            const input = this
+            const errorDiv = input.nextElementSibling
+            
+            // Remove validation error styling if present
+            if (errorDiv && errorDiv.classList.contains('validation-error')) {
+                errorDiv.remove()
+            }
+            
+            // Reset border color
+            input.style.borderColor = ''
+        })
+    </script>
+</main>
+
+<%- include('../partials/footer') %>

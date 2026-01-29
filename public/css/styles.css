@@ -885,6 +885,141 @@ footer {
   color: #744210;
 }
 
+/* ***************************************
+* Management View Styles
+**************************************** */
+
+.management-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+}
+
+.management-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.management-card {
+    background-color: var(--light-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    border: 2px solid var(--accent-color);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.management-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.management-card h2 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.management-card p {
+    color: var(--secondary-color);
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.6;
+}
+
+.management-link {
+    display: inline-block;
+    background-color: var(--accent-color);
+    color: white;
+    text-decoration: none;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-family: var(--font-heading);
+    transition: background-color 0.3s;
+}
+
+.management-link:hover {
+    background-color: var(--primary-color);
+}
+
+.management-instructions {
+    background-color: #f8fafc;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    border-left: 4px solid var(--accent-color);
+    margin-top: var(--spacing-xl);
+}
+
+.management-instructions h3 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+}
+
+.management-instructions ul {
+    margin: 0;
+    padding-left: var(--spacing-lg);
+    color: var(--secondary-color);
+}
+
+.management-instructions li {
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.6;
+}
+
+/* =========================================== */
+/* ADD INVENTORY SPECIFIC STYLES              */
+/* =========================================== */
+
+/* Select dropdown styling */
+select.form-input {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    padding-right: 2.5rem;
+}
+
+/* Textarea specific styles */
+textarea.form-input {
+    min-height: 120px;
+    resize: vertical;
+    font-family: var(--font-body);
+    line-height: 1.5;
+}
+
+/* Form layout for inventory */
+.inventory-form .form-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Input hints */
+.input-hint {
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+    margin-top: var(--spacing-xs);
+    font-style: italic;
+}
+
+/* Required field indicator */
+.form label[for]::after {
+    content: " *";
+    color: var(--error-color);
+}
+
+/* Optional field styling */
+.form .optional {
+    font-weight: normal;
+    color: var(--secondary-color);
+}
+
+.form .optional::after {
+    content: "";
+}
+
+
 /* =========================================== */
 /* MEDIA QUERIES                               */
 /* =========================================== */
@@ -910,7 +1045,21 @@ footer {
   #inv-display {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
+
+  .management-links {
+        grid-template-columns: 1fr;
+    }
+    
+    .management-container {
+        padding: var(--spacing-md);
+    }
+    
+    .management-card {
+        padding: var(--spacing-lg);
+    }
+
 }
+
 
 /* Mobile */
 @media screen and (max-width: 767px) {

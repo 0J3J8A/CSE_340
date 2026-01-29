@@ -1,0 +1,57 @@
+<%- include('../partials/header') %>
+
+<main>
+    <h1><%= title %></h1>
+    
+    <!-- Display flash messages if any -->
+    <% if (messages) { %>
+        <% if (messages.error && messages.error.length > 0) { %>
+            <div class="flash-message error">
+                <p><%= messages.error[0] %></p>
+            </div>
+        <% } %>
+        <% if (messages.success && messages.success.length > 0) { %>
+            <div class="flash-message success">
+                <p><%= messages.success[0] %></p>
+            </div>
+        <% } %>
+        <% if (messages.notice && messages.notice.length > 0) { %>
+            <div class="flash-message notice">
+                <p><%= messages.notice[0] %></p>
+            </div>
+        <% } %>
+    <% } %>
+    
+    <!-- Management Links -->
+    <div class="management-container">
+        <div class="management-links">
+            <div class="management-card">
+                <h2>Classification Management</h2>
+                <p>Add new vehicle classifications to the database.</p>
+                <a href="/inv/add-classification" class="management-link">
+                    Add New Classification
+                </a>
+            </div>
+            
+            <div class="management-card">
+                <h2>Inventory Management</h2>
+                <p>Add new vehicles to the inventory database.</p>
+                <a href="/inv/add-inventory" class="management-link">
+                    Add New Inventory
+                </a>
+            </div>
+        </div>
+        
+        <div class="management-instructions">
+            <h3>Management Instructions:</h3>
+            <ul>
+                <li>Use "Add New Classification" to create vehicle categories (e.g., SUV, Truck, Sedan)</li>
+                <li>Use "Add New Inventory" to add individual vehicles to the inventory</li>
+                <li>Classifications must be added before inventory items</li>
+                <li>All actions are logged and require proper authorization</li>
+            </ul>
+        </div>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>

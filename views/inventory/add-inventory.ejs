@@ -1,0 +1,280 @@
+<%- include('../partials/header') %>
+
+<main>
+    <h1><%= title %></h1>
+    
+    <!-- Display flash messages if any -->
+    <% if (messages) { %>
+        <% if (messages.error && messages.error.length > 0) { %>
+            <div class="flash-message error">
+                <p><%= messages.error[0] %></p>
+            </div>
+        <% } %>
+        <% if (messages.success && messages.success.length > 0) { %>
+            <div class="flash-message success">
+                <p><%= messages.success[0] %></p>
+            </div>
+        <% } %>
+        <% if (messages.notice && messages.notice.length > 0) { %>
+            <div class="flash-message notice">
+                <p><%= messages.notice[0] %></p>
+            </div>
+        <% } %>
+    <% } %>
+    
+    <!-- Validation Errors -->
+    <% if (errors && errors.length > 0) { %>
+        <div class="flash-message error">
+            <% errors.forEach(error => { %>
+                <p><%= error.msg %></p>
+            <% }) %>
+        </div>
+    <% } %>
+    
+    <!-- Add Inventory Form -->
+    <div class="form-container">
+        <form class="form" action="/inv/add-inventory" method="post" id="addInventoryForm">
+            
+            <!-- Make -->
+            <div class="form-group">
+                <label for="inv_make">Make:</label>
+                <input 
+                    type="text" 
+                    id="inv_make" 
+                    name="inv_make" 
+                    class="form-input" 
+                    placeholder="Enter vehicle make (e.g., Ford, Toyota)"
+                    value="<%= invData.inv_make || '' %>"
+                    required
+                    minlength="2"
+                    maxlength="50"
+                >
+            </div>
+            
+            <!-- Model -->
+            <div class="form-group">
+                <label for="inv_model">Model:</label>
+                <input 
+                    type="text" 
+                    id="inv_model" 
+                    name="inv_model" 
+                    class="form-input" 
+                    placeholder="Enter vehicle model (e.g., Mustang, Camry)"
+                    value="<%= invData.inv_model || '' %>"
+                    required
+                    minlength="2"
+                    maxlength="50"
+                >
+            </div>
+            
+            <!-- Year -->
+            <div class="form-group">
+                <label for="inv_year">Year:</label>
+                <input 
+                    type="text" 
+                    id="inv_year" 
+                    name="inv_year" 
+                    class="form-input" 
+                    placeholder="Enter vehicle year (e.g., 2023)"
+                    value="<%= invData.inv_year || '' %>"
+                    required
+                    pattern="\d{4}"
+                    title="Enter a 4-digit year"
+                    minlength="4"
+                    maxlength="4"
+                >
+            </div>
+            
+            <!-- Classification -->
+            <div class="form-group">
+                <label for="classificationList">Classification:</label>
+                <%- classificationList %>
+            </div>
+            
+            <!-- Price -->
+            <div class="form-group">
+                <label for="inv_price">Price:</label>
+                <input 
+                    type="number" 
+                    id="inv_price" 
+                    name="inv_price" 
+                    class="form-input" 
+                    placeholder="Enter vehicle price"
+                    value="<%= invData.inv_price || '' %>"
+                    required
+                    min="1"
+                    step="0.01"
+                >
+            </div>
+            
+            <!-- Miles -->
+            <div class="form-group">
+                <label for="inv_miles">Mileage:</label>
+                <input 
+                    type="number" 
+                    id="inv_miles" 
+                    name="inv_miles" 
+                    class="form-input" 
+                    placeholder="Enter vehicle mileage"
+                    value="<%= invData.inv_miles || '' %>"
+                    required
+                    min="0"
+                >
+            </div>
+            
+            <!-- Color -->
+            <div class="form-group">
+                <label for="inv_color">Color:</label>
+                <input 
+                    type="text" 
+                    id="inv_color" 
+                    name="inv_color" 
+                    class="form-input" 
+                    placeholder="Enter vehicle color"
+                    value="<%= invData.inv_color || '' %>"
+                    required
+                    minlength="2"
+                    maxlength="30"
+                >
+            </div>
+            
+            <!-- Image Path -->
+            <div class="form-group">
+                <label for="inv_image">Image Path:</label>
+                <input 
+                    type="text" 
+                    id="inv_image" 
+                    name="inv_image" 
+                    class="form-input" 
+                    placeholder="Enter image path"
+                    value="<%= invData.inv_image || '/images/vehicles/no-image.png' %>"
+                >
+                <div class="input-hint">
+                    Default: /images/vehicles/no-image.png
+                </div>
+            </div>
+            
+            <!-- Thumbnail Path -->
+            <div class="form-group">
+                <label for="inv_thumbnail">Thumbnail Path:</label>
+                <input 
+                    type="text" 
+                    id="inv_thumbnail" 
+                    name="inv_thumbnail" 
+                    class="form-input" 
+                    placeholder="Enter thumbnail path"
+                    value="<%= invData.inv_thumbnail || '/images/vehicles/no-image-tn.png' %>"
+                >
+                <div class="input-hint">
+                    Default: /images/vehicles/no-image-tn.png
+                </div>
+            </div>
+            
+            <!-- Description -->
+            <div class="form-group">
+                <label for="inv_description">Description:</label>
+                <textarea 
+                    id="inv_description" 
+                    name="inv_description" 
+                    class="form-input" 
+                    placeholder="Enter vehicle description"
+                    rows="5"
+                    required
+                    minlength="10"
+                ><%= invData.inv_description || '' %></textarea>
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="form-group">
+                <button type="submit" class="btn">Add Vehicle</button>
+            </div>
+            
+            <!-- Back Link -->
+            <div class="form-link">
+                <a href="/inv/">Return to Inventory Management</a>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Client-side Validation Script -->
+    <script>
+        document.getElementById('addInventoryForm').addEventListener('submit', function(event) {
+            const form = this
+            const inputs = form.querySelectorAll('input[required], textarea[required], select[required]')
+            let hasErrors = false
+            
+            // Clear previous error messages
+            form.querySelectorAll('.validation-error').forEach(el => el.remove())
+            
+            inputs.forEach(input => {
+                input.style.borderColor = ''
+                
+                if (!input.value.trim()) {
+                    showError(input, 'This field is required.')
+                    hasErrors = true
+                } else if (input.type === 'number') {
+                    const value = parseFloat(input.value)
+                    if (isNaN(value) || value < (input.min ? parseFloat(input.min) : -Infinity)) {
+                        showError(input, `Please enter a valid number (minimum: ${input.min || '0'}).`)
+                        hasErrors = true
+                    }
+                } else if (input.id === 'inv_year') {
+                    if (!/^\d{4}$/.test(input.value)) {
+                        showError(input, 'Year must be a 4-digit number.')
+                        hasErrors = true
+                    } else {
+                        const year = parseInt(input.value)
+                        const currentYear = new Date().getFullYear()
+                        if (year < 1900 || year > currentYear + 1) {
+                            showError(input, `Year must be between 1900 and ${currentYear + 1}.`)
+                            hasErrors = true
+                        }
+                    }
+                } else if (input.minlength && input.value.length < input.minlength) {
+                    showError(input, `Minimum ${input.minlength} characters required.`)
+                    hasErrors = true
+                }
+            })
+            
+            // Check description specifically
+            const description = document.getElementById('inv_description')
+            if (description.value.trim().length < 10) {
+                showError(description, 'Description must be at least 10 characters long.')
+                hasErrors = true
+            }
+            
+            if (hasErrors) {
+                event.preventDefault()
+            }
+        })
+        
+        function showError(input, message) {
+            input.style.borderColor = 'var(--error-color)'
+            
+            const errorDiv = document.createElement('div')
+            errorDiv.className = 'validation-error'
+            errorDiv.style.color = 'var(--error-color)'
+            errorDiv.style.fontSize = '0.9rem'
+            errorDiv.style.marginTop = '0.25rem'
+            
+            const errorP = document.createElement('p')
+            errorP.textContent = message
+            errorDiv.appendChild(errorP)
+            
+            input.parentNode.insertBefore(errorDiv, input.nextSibling)
+        }
+        
+        // Real-time validation feedback
+        document.querySelectorAll('#addInventoryForm input, #addInventoryForm textarea').forEach(input => {
+            input.addEventListener('input', function() {
+                const errorDiv = this.nextElementSibling
+                if (errorDiv && errorDiv.classList.contains('validation-error')) {
+                    errorDiv.remove()
+                }
+                this.style.borderColor = ''
+            })
+        })
+    </script>
+</main>
+
+<%- include('../partials/footer') %>

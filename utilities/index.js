@@ -160,6 +160,133 @@ Util.buildVehicleDetailHTML = async function(vehicle){
 }
 
 /* ****************************************
+ * Validate classification data
+ * ************************************** */
+Util.validateClassification = function(classificationName) {
+  const errors = []
+  
+  if (!classificationName || classificationName.trim() === '') {
+    errors.push('Classification name is required.')
+  } else {
+    // Check for spaces
+    if (classificationName.includes(' ')) {
+      errors.push('Classification name cannot contain spaces.')
+    }
+    
+    // Check for special characters (only letters and numbers allowed)
+    const specialChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/
+    if (specialChars.test(classificationName)) {
+      errors.push('Classification name cannot contain special characters.')
+    }
+    
+    // Check length
+    if (classificationName.length < 2) {
+      errors.push('Classification name must be at least 2 characters long.')
+    }
+    
+    if (classificationName.length > 30) {
+      errors.push('Classification name cannot exceed 30 characters.')
+    }
+  }
+  
+  return errors
+}
+
+/* **************************************
+ * Build classification select list
+ * ************************************ */
+Util.buildClassificationList = async function (classification_id = null) {
+  try {
+    let data = await invModel.getClassifications()
+    let classificationList = '<select name="classification_id" id="classificationList" class="form-input" required>'
+    classificationList += "<option value=''>Choose a Classification</option>"
+    
+    data.rows.forEach((row) => {
+      classificationList += '<option value="' + row.classification_id + '"'
+      if (classification_id != null && row.classification_id == classification_id) {
+        classificationList += " selected "
+      }
+      classificationList += ">" + row.classification_name + "</option>"
+    })
+    
+    classificationList += "</select>"
+    return classificationList
+  } catch (error) {
+    console.error("Error building classification list:", error)
+    return '<select name="classification_id" id="classificationList" class="form-input" required><option value="">Error loading classifications</option></select>'
+  }
+}
+
+/* ****************************************
+ * Validate inventory data
+ * ************************************** */
+Util.validateInventory = function(invData) {
+  const errors = []
+  
+  // Validate inv_make
+  if (!invData.inv_make || invData.inv_make.trim() === '') {
+    errors.push('Make is required.')
+  } else if (invData.inv_make.length < 2) {
+    errors.push('Make must be at least 2 characters long.')
+  }
+  
+  // Validate inv_model
+  if (!invData.inv_model || invData.inv_model.trim() === '') {
+    errors.push('Model is required.')
+  } else if (invData.inv_model.length < 2) {
+    errors.push('Model must be at least 2 characters long.')
+  }
+  
+  // Validate inv_year
+  if (!invData.inv_year || invData.inv_year.trim() === '') {
+    errors.push('Year is required.')
+  } else if (!/^\d{4}$/.test(invData.inv_year)) {
+    errors.push('Year must be a 4-digit number.')
+  } else {
+    const year = parseInt(invData.inv_year)
+    const currentYear = new Date().getFullYear()
+    if (year < 1900 || year > currentYear + 1) {
+      errors.push(`Year must be between 1900 and ${currentYear + 1}.`)
+    }
+  }
+  
+  // Validate inv_description
+  if (!invData.inv_description || invData.inv_description.trim() === '') {
+    errors.push('Description is required.')
+  } else if (invData.inv_description.length < 10) {
+    errors.push('Description must be at least 10 characters long.')
+  }
+  
+  // Validate inv_price
+  if (!invData.inv_price || invData.inv_price.trim() === '') {
+    errors.push('Price is required.')
+  } else if (isNaN(invData.inv_price) || parseFloat(invData.inv_price) <= 0) {
+    errors.push('Price must be a positive number.')
+  }
+  
+  // Validate inv_miles
+  if (!invData.inv_miles || invData.inv_miles.trim() === '') {
+    errors.push('Mileage is required.')
+  } else if (isNaN(invData.inv_miles) || parseInt(invData.inv_miles) < 0) {
+    errors.push('Mileage must be a non-negative number.')
+  }
+  
+  // Validate inv_color
+  if (!invData.inv_color || invData.inv_color.trim() === '') {
+    errors.push('Color is required.')
+  } else if (invData.inv_color.length < 2) {
+    errors.push('Color must be at least 2 characters long.')
+  }
+  
+  // Validate classification_id
+  if (!invData.classification_id || invData.classification_id === '') {
+    errors.push('Classification is required.')
+  }
+  
+  return errors
+}
+
+/* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 
  * General Error Handling
