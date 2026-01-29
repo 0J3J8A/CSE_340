@@ -1,6 +1,7 @@
 // Needed Resources
 const utilities = require("../utilities/")
 const accountModel = require("../models/account-model")
+const bcrypt = require("bcryptjs")
 
 /* ****************************************
 *  Deliver login view
@@ -11,7 +12,7 @@ async function buildLogin(req, res, next) {
     title: "Login",
     nav,
     messages: req.flash(),
-    errors: null, // AÑADIR
+    errors: null,
   })
 }
 
@@ -24,7 +25,10 @@ async function buildRegister(req, res, next) {
     title: "Register",
     nav,
     messages: req.flash(),
-    errors: null, // AÑADIR
+    errors: null,
+    account_firstname: '',
+    account_lastname: '',
+    account_email: ''
   })
 }
 
@@ -42,12 +46,26 @@ async function registerAccount(req, res) {
     account_password: "***hidden***"
   })
 
+  // Hash the password before storing
+  let hashedPassword
+  try {
+    // regular password and cost (salt is generated automatically)
+    hashedPassword = await bcrypt.hashSync(account_password, 10)
+  } catch (error) {
+    req.flash("notice", 'Sorry, there was an error processing the registration.')
+    res.status(500).render("account/register", {
+      title: "Registration",
+      nav,
+      errors: null,
+    })
+  }
+
   try {
     const regResult = await accountModel.registerAccount(
       account_firstname,
       account_lastname,
       account_email,
-      account_password
+      hashedPassword
     )
 
     console.log("Database result:", regResult)

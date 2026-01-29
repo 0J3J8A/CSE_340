@@ -39,11 +39,7 @@
                     pattern="[A-Za-z\s]{2,}"
                     title="First name must be at least 2 characters long and contain only letters"
                     class="form-input"
-                    <% if (typeof account_firstname !== 'undefined') { %>
-                        value="<%= account_firstname %>"
-                    <% } else { %>
-                        value=""
-                    <% } %>
+                    value="<%= locals.account_firstname %>"
                 >
                 <div class="input-hint">Must be at least 2 characters, letters only</div>
             </div>
@@ -60,11 +56,7 @@
                     pattern="[A-Za-z\s]{2,}"
                     title="Last name must be at least 2 characters long and contain only letters"
                     class="form-input"
-                    <% if (typeof account_lastname !== 'undefined') { %>
-                        value="<%= account_lastname %>"
-                    <% } else { %>
-                        value=""
-                    <% } %>
+                    value="<%= locals.account_lastname %>"
                 >
                 <div class="input-hint">Must be at least 2 characters, letters only</div>
             </div>
@@ -80,11 +72,7 @@
                     required
                     title="Please enter a valid email address"
                     class="form-input"
-                    <% if (typeof account_email !== 'undefined') { %>
-                        value="<%= account_email %>"
-                    <% } else { %>
-                        value=""
-                    <% } %>
+                    value="<%= locals.account_email %>"
                 >
                 <div class="input-hint">Must be a valid email format</div>
             </div>
@@ -104,7 +92,7 @@
                         class="form-input"
                     >
                     <button type="button" id="togglePassword" class="password-toggle" aria-label="Show password">
-                        👁️
+                        👁️‍🗨️
                     </button>
                 </div>
                 <div class="password-requirements">
@@ -147,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
         togglePassword.addEventListener('click', function() {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
-            this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+            this.textContent = type === 'password' ? '👁️‍🗨️' : '👁️‍🗨️';
             this.setAttribute('aria-label', type === 'password' ? 'Show password' : 'Hide password');
         });
     }
