@@ -42,16 +42,26 @@
             </div>
         </div>
         
-        <div class="management-instructions">
-            <h3>Management Instructions:</h3>
-            <ul>
-                <li>Use "Add New Classification" to create vehicle categories (e.g., SUV, Truck, Sedan)</li>
-                <li>Use "Add New Inventory" to add individual vehicles to the inventory</li>
-                <li>Classifications must be added before inventory items</li>
-                <li>All actions are logged and require proper authorization</li>
-            </ul>
+        <!-- Inventory Management Section -->
+        <div class="inventory-management-section">
+            <h2>Manage Inventory</h2>
+            <p>Select a classification from the list to see the items belonging to the classification.</p>
+            
+            <!-- Classification Select List -->
+            <%- classificationSelect %>
+            
+            <!-- Empty table for inventory display -->
+            <table id="inventoryDisplay"></table>
+            
+            <!-- No JavaScript message -->
+            <noscript>
+                <p class="notice">JavaScript must be enabled to use this page.</p>
+            </noscript>
         </div>
     </div>
 </main>
+
+<!-- JavaScript for inventory management -->
+<script src="../../js/inventory.js"></script>
 
 <%- include('../partials/footer') %>
