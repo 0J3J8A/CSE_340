@@ -11,12 +11,23 @@ router.get("/login", utilities.handleErrors(accountController.buildLogin))
 // Route to build registration view
 router.get("/register", utilities.handleErrors(accountController.buildRegister))
 
+// Route to build account management view
+router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildAccountManagement))
+
 // Process the registration data
 router.post(
   "/register",
   regValidate.registrationRules(),
   regValidate.checkRegData,
   utilities.handleErrors(accountController.registerAccount)
+)
+
+// Process the login request
+router.post(
+  "/login",
+  regValidate.loginRules(),
+  regValidate.checkLoginData,
+  utilities.handleErrors(accountController.accountLogin)
 )
 
 module.exports = router

@@ -1,0 +1,53 @@
+<%- include('../partials/header') %>
+
+<main>
+    <h1><%= title %></h1>
+    
+    <!-- Display flash messages -->
+    <% if (messages) { %>
+        <% if (messages.error && messages.error.length > 0) { %>
+            <div class="flash-message error">
+                <p><%= messages.error[0] %></p>
+            </div>
+        <% } %>
+        <% if (messages.success && messages.success.length > 0) { %>
+            <div class="flash-message success">
+                <p><%= messages.success[0] %></p>
+            </div>
+        <% } %>
+    <% } %>
+    
+    <!-- Display validation errors -->
+    <% if (errors) { %>
+        <ul class="notice">
+            <% errors.array().forEach(error => { %>
+                <li><%= error.msg %></li>
+            <% }) %>
+        </ul>
+    <% } %>
+    
+    <div class="account-management">
+        <div class="welcome-message">
+            <h2>Welcome to Your Account!</h2>
+            <p>You're logged in.</p>
+            
+            <% if (locals.accountData) { %>
+                <div class="account-info">
+                    <p><strong>Name:</strong> <%= locals.accountData.account_firstname %> <%= locals.accountData.account_lastname %></p>
+                    <p><strong>Email:</strong> <%= locals.accountData.account_email %></p>
+                    <p><strong>Account Type:</strong> <%= locals.accountData.account_type %></p>
+                </div>
+            <% } %>
+            
+            <div class="account-actions">
+                <h3>Account Actions:</h3>
+                <ul>
+                    <li><a href="/account/logout">Logout</a></li>
+                    <li><a href="/account/update">Update Account Information</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>
