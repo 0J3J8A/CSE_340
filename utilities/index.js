@@ -331,4 +331,24 @@ Util.checkJWTToken = (req, res, next) => {
  **************************************** */
 Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 
+
+/* ****************************************
+ *  Check Employee or Admin Access
+ * ************************************ */
+ Util.requireEmployeeOrAdmin = (req, res, next) => {
+  if (!res.locals.loggedin) {
+    req.flash("notice", "Please log in to access this page.")
+    return res.redirect("/account/login")
+  }
+  
+  const accountType = res.locals.accountData.account_type
+  if (accountType !== "Employee" && accountType !== "Admin") {
+    req.flash("notice", "Access denied. Employee or Admin privileges required.")
+    return res.redirect("/account/login")
+  }
+  
+  next()
+ }
+
+
 module.exports = Util

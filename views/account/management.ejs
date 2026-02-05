@@ -1,53 +1,54 @@
-<%- include('../partials/header') %>
+<!-- Account Management View Content -->
+<h1><%= title %></h1>
 
-<main>
-    <h1><%= title %></h1>
-    
-    <!-- Display flash messages -->
-    <% if (messages) { %>
-        <% if (messages.error && messages.error.length > 0) { %>
-            <div class="flash-message error">
-                <p><%= messages.error[0] %></p>
-            </div>
-        <% } %>
-        <% if (messages.success && messages.success.length > 0) { %>
-            <div class="flash-message success">
-                <p><%= messages.success[0] %></p>
-            </div>
-        <% } %>
-    <% } %>
-    
-    <!-- Display validation errors -->
-    <% if (errors) { %>
-        <ul class="notice">
-            <% errors.array().forEach(error => { %>
-                <li><%= error.msg %></li>
-            <% }) %>
-        </ul>
-    <% } %>
-    
-    <div class="account-management">
-        <div class="welcome-message">
-            <h2>Welcome to Your Account!</h2>
-            <p>You're logged in.</p>
-            
-            <% if (locals.accountData) { %>
-                <div class="account-info">
-                    <p><strong>Name:</strong> <%= locals.accountData.account_firstname %> <%= locals.accountData.account_lastname %></p>
-                    <p><strong>Email:</strong> <%= locals.accountData.account_email %></p>
-                    <p><strong>Account Type:</strong> <%= locals.accountData.account_type %></p>
-                </div>
-            <% } %>
-            
-            <div class="account-actions">
-                <h3>Account Actions:</h3>
-                <ul>
-                    <li><a href="/account/logout">Logout</a></li>
-                    <li><a href="/account/update">Update Account Information</a></li>
-                </ul>
-            </div>
+<!-- Display flash messages if any exist -->
+<% if (messages) { %>
+    <% if (messages.error && messages.error.length > 0) { %>
+        <div class="flash-message error">
+            <p><%= messages.error[0] %></p>
         </div>
-    </div>
-</main>
+    <% } %>
+    <% if (messages.success && messages.success.length > 0) { %>
+        <div class="flash-message success">
+            <p><%= messages.success[0] %></p>
+        </div>
+    <% } %>
+<% } %>
 
-<%- include('../partials/footer') %>
+<div class="account-management">
+    <!-- Greeting based on account type -->
+    <% if (locals.accountData) { %>
+        <h2>Welcome <%= locals.accountData.account_firstname %></h2>
+        
+        <!-- Inventory Management link for Employee/Admin only -->
+        <% if (locals.accountData.account_type === 'Employee' || locals.accountData.account_type === 'Admin') { %>
+            <h3>Inventory Management</h3>
+            <p class="inventory-link">
+                <a href="/inv/">Access Inventory Management</a>
+            </p>
+        <% } %>
+        
+        <!-- Update Account Information link (visible to all users) -->
+        <div class="account-update-link">
+            <a href="/account/update/<%= locals.accountData.account_id %>">Update Account Information</a>
+        </div>
+        
+        <!-- Display account information -->
+        <div class="account-info">
+            <p><strong>Name:</strong> <%= locals.accountData.account_firstname %> <%= locals.accountData.account_lastname %></p>
+            <p><strong>Email:</strong> <%= locals.accountData.account_email %></p>
+            <p><strong>Account Type:</strong> <%= locals.accountData.account_type %></p>
+        </div>
+    <% } else { %>
+        <h2>Welcome to Your Account!</h2>
+        <p>You're logged in.</p>
+    <% } %>
+    
+    <!-- Account actions -->
+    <div class="account-actions">
+        <h3>Account Actions:</h3>
+        <ul>
+            <li><a href="/account/logout">Logout</a></li>
+        </ul>
+    </div>
+</div>

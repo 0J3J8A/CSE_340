@@ -1,0 +1,185 @@
+<%- include('../partials/header') %>
+
+<main>
+    <h1><%= title %></h1>
+    
+    <!-- Display flash messages -->
+    <% if (messages) { %>
+        <% if (messages.error && messages.error.length > 0) { %>
+            <div class="flash-message error">
+                <p><%= messages.error[0] %></p>
+            </div>
+        <% } %>
+        <% if (messages.success && messages.success.length > 0) { %>
+            <div class="flash-message success">
+                <p><%= messages.success[0] %></p>
+            </div>
+        <% } %>
+        <% if (messages.notice && messages.notice.length > 0) { %>
+            <div class="flash-message notice">
+                <p><%= messages.notice[0] %></p>
+            </div>
+        <% } %>
+    <% } %>
+    
+    <!-- Display validation errors -->
+    <% if (errors) { %>
+        <ul class="notice">
+            <% errors.forEach(error => { %>
+                <li><%= error.msg %></li>
+            <% }) %>
+        </ul>
+    <% } %>
+    
+    <div class="form-container">
+        <!-- Account Update Form -->
+        <h2>Account Update</h2>
+        <form action="/account/update-account" method="post" class="form" id="accountUpdateForm">
+            <!-- First Name -->
+            <div class="form-group">
+                <label for="account_firstname">First Name *</label>
+                <input 
+                    type="text" 
+                    id="account_firstname" 
+                    name="account_firstname" 
+                    placeholder="Enter your first name" 
+                    required
+                    pattern="[A-Za-z\s]{2,}"
+                    title="First name must be at least 2 characters long and contain only letters"
+                    class="form-input"
+                    value="<%= locals.account_firstname || '' %>"
+                >
+                <div class="input-hint">Must be at least 2 characters, letters only</div>
+            </div>
+            
+            <!-- Last Name -->
+            <div class="form-group">
+                <label for="account_lastname">Last Name *</label>
+                <input 
+                    type="text" 
+                    id="account_lastname" 
+                    name="account_lastname" 
+                    placeholder="Enter your last name" 
+                    required
+                    pattern="[A-Za-z\s]{2,}"
+                    title="Last name must be at least 2 characters long and contain only letters"
+                    class="form-input"
+                    value="<%= locals.account_lastname || '' %>"
+                >
+                <div class="input-hint">Must be at least 2 characters, letters only</div>
+            </div>
+            
+            <!-- Email -->
+            <div class="form-group">
+                <label for="account_email">Email Address *</label>
+                <input 
+                    type="email" 
+                    id="account_email" 
+                    name="account_email" 
+                    placeholder="Enter your email (example@domain.com)" 
+                    required
+                    title="Please enter a valid email address"
+                    class="form-input"
+                    value="<%= locals.account_email || '' %>"
+                >
+                <div class="input-hint">Must be a valid email format</div>
+            </div>
+            
+            <!-- Hidden field for account_id -->
+            <input type="hidden" name="account_id" value="<%= locals.account_id || '' %>">
+            
+            <!-- Submit Button -->
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Update Account</button>
+            </div>
+            
+            <div class="form-note">
+                <p>* All fields are required and must meet the validation criteria</p>
+            </div>
+        </form>
+        
+        <!-- Change Password Form -->
+        <h2>Change Password</h2>
+        <form action="/account/update-password" method="post" class="form" id="passwordUpdateForm">
+            <!-- New Password -->
+            <div class="form-group">
+                <label for="account_password">New Password *</label>
+                <div class="password-container">
+                    <input 
+                        type="password" 
+                        id="account_password" 
+                        name="account_password" 
+                        placeholder="Enter new password" 
+                        required
+                        pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
+                        title="Password must be at least 12 characters and contain at least 1 number, 1 lowercase letter, 1 capital letter and 1 special character"
+                        class="form-input"
+                    >
+                    <button type="button" id="togglePassword" class="password-toggle" aria-label="Show password">
+                        👁️‍🗨️
+                    </button>
+                </div>
+                <div class="password-requirements">
+                    <p class="requirements-title">Password Requirements:</p>
+                    <ul class="requirements-list">
+                        <li>Minimum 12 characters</li>
+                        <li>At least 1 lowercase letter (a-z)</li>
+                        <li>At least 1 capital letter (A-Z)</li>
+                        <li>At least 1 number (0-9)</li>
+                        <li>At least 1 special character (!@#$%^&* etc.)</li>
+                        <li>No spaces allowed</li>
+                    </ul>
+                    <p class="requirements-note">Note: Entering a new password will change your current password.</p>
+                </div>
+            </div>
+            
+            <!-- Hidden field for account_id -->
+            <input type="hidden" name="account_id" value="<%= locals.account_id || '' %>">
+            
+            <!-- Submit Button -->
+            <div class="form-group">
+                <button type="submit" class="btn btn-secondary">Change Password</button>
+            </div>
+        </form>
+        
+        <!-- Back to Account Management -->
+        <div class="form-link">
+            <p><a href="/account/">Return to Account Management</a></p>
+        </div>
+    </div>
+</main>
+
+<!-- Password Toggle JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle password visibility
+    const togglePassword = document.querySelector('#togglePassword');
+    const passwordInput = document.querySelector('#account_password');
+    
+    if (togglePassword && passwordInput) {
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? '👁️‍🗨️' : '👁️‍🗨️';
+            this.setAttribute('aria-label', type === 'password' ? 'Show password' : 'Hide password');
+        });
+    }
+    
+    // Client-side validation for account update form
+    const accountForm = document.getElementById('accountUpdateForm');
+    if (accountForm) {
+        accountForm.addEventListener('submit', function(event) {
+            const firstName = document.getElementById('account_firstname');
+            const lastName = document.getElementById('account_lastname');
+            const email = document.getElementById('account_email');
+            
+            if (!firstName.value.trim() || !lastName.value.trim() || !email.value.trim()) {
+                event.preventDefault();
+                alert('Please fill in all required fields.');
+            }
+        });
+    }
+});
+</script>
+
+<%- include('../partials/footer') %>

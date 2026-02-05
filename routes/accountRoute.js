@@ -14,6 +14,34 @@ router.get("/register", utilities.handleErrors(accountController.buildRegister))
 // Route to build account management view
 router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildAccountManagement))
 
+// Route to build account update view
+router.get("/update/:account_id", 
+  utilities.checkLogin, 
+  utilities.handleErrors(accountController.buildAccountUpdateView)
+)
+
+// Route to process account update
+router.post("/update-account", 
+  utilities.checkLogin,
+  regValidate.updateAccountRules(),
+  regValidate.checkUpdateAccountData,
+  utilities.handleErrors(accountController.updateAccount)
+)
+
+// Route to process password change
+router.post("/update-password", 
+  utilities.checkLogin,
+  regValidate.updatePasswordRules(),
+  regValidate.checkUpdatePasswordData,
+  utilities.handleErrors(accountController.updatePassword)
+)
+
+// Route to process logout
+router.get("/logout", 
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.logout)
+)
+
 // Process the registration data
 router.post(
   "/register",
